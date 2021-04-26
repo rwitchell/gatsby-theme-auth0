@@ -14,14 +14,16 @@ const useAuth = (stateCallback = (_state: SessionState) => {}) => {
     };
 
     (async () => {
-      await auth.checkSession();
-      try {
-        const user = auth.getUserProfile();
-        setProfile(user);
-      } catch (error) {
-        console.log(`Error: ${error}`);
+      // @see: https://github.com/epilande/gatsby-theme-auth0/pull/228/files
+      let profile = auth.getUserProfile();
+      // If it's past the expiration date of the token, checkSession()
+      // @ts-ignore
+      if (!profile || Date.now() > profile.exp * 1000) {
+        await auth.checkSession();
+        profile = auth.getUserProfile();
       }
 
+      setProfile(profile);
       setIsLoading(false);
     })();
 

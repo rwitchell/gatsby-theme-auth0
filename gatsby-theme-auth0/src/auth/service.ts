@@ -18,7 +18,7 @@ class Auth {
 
   public sessionStateCallback = (_state: SessionState) => {};
 
-  private auth0 = process.env.AUTH0_DOMAIN
+  public auth0 = process.env.AUTH0_DOMAIN
     ? new auth0.WebAuth(config)
     : undefined;
 
@@ -48,6 +48,10 @@ class Auth {
           return resolve();
         });
     });
+
+  // public refreshUser = () => {
+  //   this.auth0?.checkSession()
+  // }
 
   public getAccessToken = () => this.accessToken;
 
